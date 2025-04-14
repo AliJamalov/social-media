@@ -1,0 +1,28 @@
+export type User = {
+  _id: string;
+  username: string;
+  bio: string;
+  password: string;
+  avatar: string;
+  isPrivate: boolean;
+  savedPosts: string[];
+  followers: string[];
+  following: string[];
+  followRequests: string[];
+  likedPosts: string[];
+  lastSeen: Date;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Post = {
+  user: string[];
+  image: string;
+  description: string;
+  tags: string[];
+  views: number[];
+  likes: number;
+  taggedUsers: string[];
+  createdAt: Date;
+  updatedAt: Date;
+};
