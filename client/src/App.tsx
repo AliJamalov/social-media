@@ -8,13 +8,14 @@ import AddPost from "./pages/AddPost";
 import Profile from "./pages/Profile";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import PostViewer from "./pages/PostViewer";
 import { useAuthStore } from "./store/authStore";
 import { ImSpinner8 } from "react-icons/im";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const location = useLocation();
-  const pathsToHide = ["/login", "/signup"];
+  const pathsToHide = ["/login", "/signup", "/new-post"];
 
   const { user, checkAuth, checkAuthLoading } = useAuthStore();
 
@@ -33,12 +34,13 @@ const App = () => {
   const hideNavbar = pathsToHide.some((path) => location.pathname.startsWith(path));
 
   return (
-    <div className="bg-gradient-to-r from-[#ff9966] to-[#ff5e62] h-screen">
+    <div className="bg-gradient-to-r from-[#ff9966] to-[#ff5e62] min-h-screen">
       <Routes>
         <Route path="/" element={user ? <Home /> : <Navigate to="login" />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/new-post" element={<AddPost />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/post/:id" element={<PostViewer />} />
+        <Route path="/profile/:id?" element={user ? <Profile /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
         <Route path="/login" element={!user ? <Signin /> : <Navigate to="/" />} />
       </Routes>

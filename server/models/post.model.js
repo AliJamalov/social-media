@@ -27,12 +27,10 @@ const postSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    taggedUsers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    taggedUsers: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true }
 );

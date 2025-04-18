@@ -1,3 +1,4 @@
+import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 
 export const requestToFollow = async (req, res) => {
@@ -69,7 +70,7 @@ export const findUsers = async (req, res) => {
     if (query && query.length > 2 && typeof query === "string") {
       const users = await User.find({
         username: { $regex: query, $options: "i" },
-      });
+      }).select("username avatar");
 
       if (users.length === 0) {
         return res.status(404).json({ message: "User not found" });
@@ -136,23 +137,45 @@ export const deleteFromSavedPosts = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { avatar, bio } = req.body;
+  const { avatar, bio, isPrivate } = req.body;
   const user = req.user;
 
   try {
     if (avatar) user.avatar = avatar;
     if (bio) user.bio = bio;
+    if (typeof isPrivate === "boolean") user.isPrivate = isPrivate;
 
     await user.save();
 
     return res.status(200).json({
       message: "Profile updated successfully",
-      user: {
-        avatar: user.avatar,
-        bio: user.bio,
-      },
+      user,
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getUserProfile = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "user not found!" });
+    }
+
+    const posts = await Post.find({ user: id });
+
+    const profile = {
+      ...user._doc,
+      posts,
+    };
+
+    return res.status(200).json(profile);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

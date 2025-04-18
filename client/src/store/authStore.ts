@@ -13,6 +13,7 @@ type AuthStore = {
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  setUser: (user: User) => void;
 };
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -72,4 +73,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ checkAuthLoading: false });
     }
   },
+
+  setUser: (user) => set({ user }),
 }));

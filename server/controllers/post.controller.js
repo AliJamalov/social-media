@@ -1,5 +1,4 @@
 import Post from "../models/post.model.js";
-import User from "../models/user.model.js";
 
 export const createPost = async (req, res) => {
   const { image, description, tags, taggedUsers } = req.body;
@@ -124,18 +123,24 @@ export const fetchPosts = async (req, res) => {
   const skip = (page - 1) * limit;
 
   try {
-    const publicUsers = await User.find({ isPrivate: false }).select("_id");
-    const publicUserIds = publicUsers.map((user) => user._id);
-
-    const posts = await Post.find({ user: { $in: publicUserIds } })
+    const posts = await Post.find()
+      .populate({
+        path: "user",
+        match: { isPrivate: false },
+        select: "_id username avatar",
+      })
+      .select("image _id user likes createdAt")
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
+
+    const filtered = posts.filter((post) => post.user !== null);
 
     return res.status(200).json({
       page,
       limit,
-      count: posts.length,
-      posts,
+      count: filtered.length,
+      posts: filtered,
     });
   } catch (error) {
     console.log("Error fetching posts:", error);

@@ -7,12 +7,15 @@ import {
   savePost,
   deleteFromSavedPosts,
   updateProfile,
+  getUserProfile,
 } from "../controllers/user.controller.js";
 import { protectRoute } from "../middlewares/protectRoute.js";
 
 const router = express.Router();
 
-router.get("/", findUsers);
+router.get("/:query", findUsers);
+
+router.get("/profile/:id", getUserProfile);
 
 router.post("/request", protectRoute, requestToFollow);
 

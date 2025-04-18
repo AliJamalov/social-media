@@ -1,58 +1,70 @@
-import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import { CgProfile } from "react-icons/cg";
-import { axiosInstance } from "../../utils/axios";
 import { MdLogout } from "react-icons/md";
-import { Post } from "../../types";
+import { User } from "../../types";
 
-const ProfileInfo = () => {
-  const { user } = useAuthStore();
+type Props = {
+  postsCount: number;
+  toggleModal: () => void;
+  isOtherUser: boolean;
+  profileInfo: User | null;
+  otherUserPostsCount: number | null | undefined;
+  isPrivate: boolean | undefined;
+};
 
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+const ProfileInfo = ({ postsCount, toggleModal, isOtherUser, profileInfo, otherUserPostsCount, isPrivate }: Props) => {
+  const { user, logout } = useAuthStore();
 
-  const getPosts = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get("/posts/my-posts");
-      setPosts(response.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
+  const profileUser = isOtherUser ? profileInfo : user;
 
   return (
     <div>
+      {/* Header: username and logout */}
       <div className="flex justify-between items-center">
-        <h1 className="font-medium text-2xl">{user?.username}</h1>
-        <MdLogout size={25} color="white" />
+        <h1 className="font-medium text-2xl">{profileUser?.username}</h1>
+        {!isOtherUser && <MdLogout onClick={logout} size={25} color="white" />}
       </div>
+
+      {/* Avatar & stats */}
       <div className="flex justify-between items-center mt-4">
-        {user?.avatar ? <img src={user?.avatar} alt="profile-image" /> : <CgProfile size={70} color="white" />}
-        {/* posts */}
+        {profileUser?.avatar ? (
+          <img src={profileUser.avatar} className="h-[75px] w-[75px] object-cover rounded-full" alt="profile-image" />
+        ) : (
+          <CgProfile size={70} color="white" />
+        )}
+
         <div>
-          <p className="text-center">{posts.length}</p>
+          <p className="text-center">{isOtherUser ? otherUserPostsCount : postsCount}</p>
           <p>posts</p>
         </div>
-        {/* followers */}
+
         <div>
-          <p className="text-center">{user?.followers.length}</p>
+          <p className="text-center">{profileUser?.followers?.length ?? 0}</p>
           <p>followers</p>
         </div>
-        {/* followings */}
+
         <div>
-          <p className="text-center">{user?.following.length}</p>
+          <p className="text-center">{profileUser?.following?.length ?? 0}</p>
           <p>followings</p>
         </div>
       </div>
-      <p className="my-4">{user?.bio}ddd</p>
-      <button className="text-black bg-[#ffeaa7] p-2 rounded-md">edit profile</button>
+
+      {/* Bio */}
+      <p className="my-4">{profileUser?.bio}</p>
+
+      {isOtherUser && (
+        <div className="flex items-center gap-3">
+          <button className="bg-blue-600 text-white rounded-md px-2 py-1">Follow</button>
+          {!isPrivate && <button className="bg-[#ffeaa7] text-gray-600 rounded-md px-2 py-1">Message</button>}
+        </div>
+      )}
+
+      {/* Edit button */}
+      {!isOtherUser && (
+        <button onClick={toggleModal} className="text-black bg-[#ffeaa7] p-2 rounded-md">
+          edit profile
+        </button>
+      )}
     </div>
   );
 };
