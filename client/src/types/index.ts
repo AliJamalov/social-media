@@ -27,3 +27,23 @@ export type Post = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type Comment = {
+  _id: string;
+  user: User;
+  post: Post;
+  likes: number;
+  text: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Notification = {
+  sender: User;
+  receiver: User;
+  text: string;
+  type: "like" | "comment" | "follow";
+  post?: Post;
+  createdAt: Date;
+  updatedAt: Date;
+};

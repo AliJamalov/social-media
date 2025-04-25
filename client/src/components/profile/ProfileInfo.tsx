@@ -2,6 +2,8 @@ import { useAuthStore } from "../../store/authStore";
 import { CgProfile } from "react-icons/cg";
 import { MdLogout } from "react-icons/md";
 import { User } from "../../types";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../../utils/axios";
 
 type Props = {
   postsCount: number;
@@ -10,12 +12,49 @@ type Props = {
   profileInfo: User | null;
   otherUserPostsCount: number | null | undefined;
   isPrivate: boolean | undefined;
+  id?: string | null;
 };
 
-const ProfileInfo = ({ postsCount, toggleModal, isOtherUser, profileInfo, otherUserPostsCount, isPrivate }: Props) => {
+const ProfileInfo = ({
+  postsCount,
+  toggleModal,
+  id,
+  isOtherUser,
+  profileInfo,
+  otherUserPostsCount,
+  isPrivate,
+}: Props) => {
   const { user, logout } = useAuthStore();
 
   const profileUser = isOtherUser ? profileInfo : user;
+  const [loading, setLoading] = useState(false);
+  const [isRequested, setIsRequested] = useState(false);
+
+  const checkRequest = () => {
+    if (user?._id && profileUser?.followRequests?.includes(user._id)) {
+      setIsRequested(true);
+    }
+  };
+
+  const handleSendFollow = async () => {
+    if (!id || !user) return;
+
+    setLoading(true);
+    try {
+      await axiosInstance.post("/users/request", { receiverId: id });
+      setIsRequested(true);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user && profileUser) {
+      checkRequest();
+    }
+  }, [user, profileUser]);
 
   return (
     <div>
@@ -54,7 +93,13 @@ const ProfileInfo = ({ postsCount, toggleModal, isOtherUser, profileInfo, otherU
 
       {isOtherUser && (
         <div className="flex items-center gap-3">
-          <button className="bg-blue-600 text-white rounded-md px-2 py-1">Follow</button>
+          <button
+            onClick={handleSendFollow}
+            disabled={loading}
+            className={`${loading ? "bg-blue-400" : "bg-blue-600"} text-white rounded-md px-2 py-1`}
+          >
+            {isRequested ? "Requested" : "Follow"}
+          </button>
           {!isPrivate && <button className="bg-[#ffeaa7] text-gray-600 rounded-md px-2 py-1">Message</button>}
         </div>
       )}

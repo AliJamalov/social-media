@@ -3,6 +3,7 @@ import Comment from "../models/comment.model.js";
 export const addComment = async (req, res) => {
   const { postId, text } = req.body;
   const userId = req.user._id;
+  console.log(req.body);
 
   try {
     if (!postId || !text) return res.status(400).json({ message: "invalid data" });
@@ -26,7 +27,7 @@ export const getPostComments = async (req, res) => {
   const { postId } = req.params;
 
   try {
-    const comments = await Comment.find({ post: postId }).populate("user", "username profilePic");
+    const comments = await Comment.find({ post: postId }).populate("user", "username avatar");
 
     return res.status(200).json(comments);
   } catch (error) {

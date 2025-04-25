@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { AiOutlineHome } from "react-icons/ai";
-import { IoSearchOutline, IoOptionsOutline } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
+import { BsBookmark } from "react-icons/bs";
 import { GoPlus } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 
@@ -43,15 +44,15 @@ const Navbar = () => {
         </div>
 
         <NavLink
-          to="/settings"
+          to="/saved-post"
           className={({ isActive }) =>
             `inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group ${
               isActive ? "text-blue-600" : "text-gray-500"
             }`
           }
         >
-          <IoOptionsOutline size={25} />
-          <span className="sr-only">Settings</span>
+          <BsBookmark size={25} />
+          <span className="sr-only">Saved posts</span>
         </NavLink>
 
         <NavLink

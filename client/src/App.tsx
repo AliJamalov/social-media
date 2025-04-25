@@ -9,19 +9,30 @@ import Profile from "./pages/Profile";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import PostViewer from "./pages/PostViewer";
+import Notifications from "./pages/Notifications";
 import { useAuthStore } from "./store/authStore";
 import { ImSpinner8 } from "react-icons/im";
 import { Toaster } from "react-hot-toast";
+import { useSocketStore } from "./store/socketStore";
 
 const App = () => {
   const location = useLocation();
   const pathsToHide = ["/login", "/signup", "/new-post"];
 
   const { user, checkAuth, checkAuthLoading } = useAuthStore();
+  const { connectSocket, disconnectSocket } = useSocketStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    if (user) {
+      connectSocket(user);
+    } else {
+      disconnectSocket();
+    }
+  }, [user]);
 
   if (checkAuthLoading) {
     return (
@@ -34,11 +45,12 @@ const App = () => {
   const hideNavbar = pathsToHide.some((path) => location.pathname.startsWith(path));
 
   return (
-    <div className="bg-gradient-to-r from-[#ff9966] to-[#ff5e62] min-h-screen">
+    <div className="bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#ff0080] min-h-screen">
       <Routes>
         <Route path="/" element={user ? <Home /> : <Navigate to="login" />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/new-post" element={<AddPost />} />
+        <Route path="/notifications" element={<Notifications />} />
         <Route path="/post/:id" element={<PostViewer />} />
         <Route path="/profile/:id?" element={user ? <Profile /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />

@@ -39,7 +39,6 @@ const Profile = () => {
       const response = await axiosInstance.get(`/users/profile/${id}`);
       setProfileInfo(response.data);
       setOtherUserPosts(response.data.posts);
-      console.log(response);
     } catch (error) {
       console.log(error);
     } finally {
@@ -65,6 +64,7 @@ const Profile = () => {
           toggleModal={toggleModal}
           postsCount={posts.length}
           isPrivate={profileInfo?.isPrivate}
+          id={id}
         />
         {loading && <p className="text-white text-center mt-4">Loading...</p>}
         {!loading && posts.length === 0 && (

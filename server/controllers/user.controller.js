@@ -1,5 +1,7 @@
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
+import Notification from "../models/notification.model.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const requestToFollow = async (req, res) => {
   const { receiverId } = req.body;
@@ -12,8 +14,11 @@ export const requestToFollow = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (sender.following.includes(receiverId)) return;
+    if (sender.following.includes(receiverId)) {
+      return res.status(200).json({ message: "Already following" });
+    }
 
+    // Добавляем в запросы или подписки
     if (receiver.isPrivate) {
       receiver.followRequests.push(sender._id);
     } else {
@@ -24,9 +29,28 @@ export const requestToFollow = async (req, res) => {
     await receiver.save();
     await sender.save();
 
-    return res.status(201);
+    // 🔔 Создаём уведомление
+    const newNotification = new Notification({
+      sender: sender._id,
+      receiver: receiver._id,
+      type: "follow",
+      text: `${sender.username} sent you a follow request`,
+    });
+
+    await newNotification.save();
+
+    const populatedNotification = await newNotification.populate("sender", "username avatar");
+
+    const receiverSocketId = getReceiverSocketId(receiver._id.toString());
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newNotification", populatedNotification);
+    }
+
+    return res.status(201).json({ message: "Follow request handled" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -89,7 +113,7 @@ export const findUsers = async (req, res) => {
 export const savePost = async (req, res) => {
   const { postId } = req.body;
   const user = req.user;
-
+  console.log(postId);
   try {
     if (!postId) {
       return res.status(400).json({ message: "Post ID is required" });
@@ -104,7 +128,7 @@ export const savePost = async (req, res) => {
 
     return res.status(200).json({
       message: "Post saved successfully",
-      savedPosts: user.savedPosts,
+      user,
     });
   } catch (error) {
     console.log("Error saving post:", error);

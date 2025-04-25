@@ -47,6 +47,7 @@ const PostViewer = () => {
     <div>
       {posts?.map((post) => (
         <Post
+          _id={post._id}
           key={post._id}
           userId={post.user._id}
           username={post.user.username}

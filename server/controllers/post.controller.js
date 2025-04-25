@@ -86,16 +86,19 @@ export const toggleLikePost = async (req, res) => {
 
     if (alreadyLiked) {
       post.likes--;
-      user.likedPosts = user.likedPosts.filter((likedPost) => likedPost._id.toString() !== post._id.toString());
+      user.likedPosts = user.likedPosts.filter((likedPost) => likedPost.toString() !== post._id.toString());
     } else {
       post.likes++;
-      user.likedPosts = user.likedPosts.push(post._id);
+      user.likedPosts.push(post._id);
     }
 
     await post.save();
     await user.save();
 
-    return res.status(200).json(post);
+    return res.status(200).json({
+      post,
+      user,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
