@@ -132,7 +132,7 @@ export const fetchPosts = async (req, res) => {
         match: { isPrivate: false },
         select: "_id username avatar",
       })
-      .select("image _id user likes createdAt")
+      .select("image _id user likes description createdAt")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

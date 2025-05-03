@@ -19,7 +19,7 @@ router.get("/my-posts", protectRoute, getUsersPosts);
 
 router.get("/", protectRoute, fetchPosts);
 
-router.get("/:id", protectRoute, getPostById);
+router.get("/:id", getPostById);
 
 router.patch("/:id", protectRoute, updatePost);
 

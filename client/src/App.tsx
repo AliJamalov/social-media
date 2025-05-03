@@ -10,6 +10,9 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import PostViewer from "./pages/PostViewer";
 import Notifications from "./pages/Notifications";
+import SavedPosts from "./pages/SavedPosts";
+import SinglePost from "./pages/Post";
+import NewStory from "./pages/NewStory";
 import { useAuthStore } from "./store/authStore";
 import { ImSpinner8 } from "react-icons/im";
 import { Toaster } from "react-hot-toast";
@@ -51,7 +54,10 @@ const App = () => {
         <Route path="/explore" element={<Explore />} />
         <Route path="/new-post" element={<AddPost />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/post/:id" element={<PostViewer />} />
+        <Route path="/saved-posts" element={<SavedPosts />} />
+        <Route path="/new-story" element={<NewStory />} />
+        <Route path="/posts/:id" element={<PostViewer />} />
+        <Route path="/post/:id" element={<SinglePost />} />
         <Route path="/profile/:id?" element={user ? <Profile /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
         <Route path="/login" element={!user ? <Signin /> : <Navigate to="/" />} />

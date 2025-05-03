@@ -69,7 +69,7 @@ const Profile = () => {
         {loading && <p className="text-white text-center mt-4">Loading...</p>}
         {!loading && posts.length === 0 && (
           <Link to="/new-post" className="flex justify-center mt-4">
-            {!isOtherUser && <p className="text-blue-700 font-semibold">Create your first post</p>}
+            {!isOtherUser && <p className="text-white font-semibold">Create your first post</p>}
           </Link>
         )}
         <Posts

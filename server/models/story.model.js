@@ -6,7 +6,7 @@ const storySchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  image: {
+  mediaUrl: {
     type: String,
     required: true,
   },

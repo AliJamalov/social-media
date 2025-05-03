@@ -1,20 +1,43 @@
 import Comment from "../models/comment.model.js";
+import User from "../models/user.model.js";
+import Notification from "../models/notification.model.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const addComment = async (req, res) => {
-  const { postId, text } = req.body;
-  const userId = req.user._id;
-  console.log(req.body);
-
+  const { postId, text, receiverId } = req.body;
+  const sender = req.user;
   try {
     if (!postId || !text) return res.status(400).json({ message: "invalid data" });
 
     const newComment = new Comment({
       post: postId,
       text,
-      user: userId,
+      user: sender._id,
     });
 
     await newComment.save();
+
+    const receiver = await User.findById(receiverId);
+
+    if (!receiver) return res.status(404).json({ message: "user not found" });
+
+    const newNotification = new Notification({
+      sender: sender._id,
+      receiver: receiver._id,
+      post: postId,
+      type: "comment",
+      text: `${sender.username} commented your post`,
+    });
+
+    await newNotification.save();
+
+    const populatedNotification = await newNotification.populate("sender", "username avatar");
+
+    const receiverSocketId = getReceiverSocketId(receiver._id.toString());
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newNotification", populatedNotification);
+    }
 
     return res.status(201).json({ message: "Comment created successfully!", newComment });
   } catch (error) {

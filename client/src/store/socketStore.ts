@@ -2,6 +2,8 @@ import { create } from "zustand";
 import io, { Socket } from "socket.io-client";
 import { User } from "../types";
 
+const URI = "http://localhost:5000";
+
 type socketStore = {
   socket: Socket | null;
   onlineUsers: User[];
@@ -16,7 +18,7 @@ export const useSocketStore = create<socketStore>((set, get) => ({
   connectSocket: (authUser) => {
     if (!authUser || get().socket) return;
 
-    const socket: Socket = io("http://localhost:5000", {
+    const socket: Socket = io(URI, {
       query: {
         userId: authUser._id,
       },

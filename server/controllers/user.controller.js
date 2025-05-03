@@ -18,7 +18,6 @@ export const requestToFollow = async (req, res) => {
       return res.status(200).json({ message: "Already following" });
     }
 
-    // Добавляем в запросы или подписки
     if (receiver.isPrivate) {
       receiver.followRequests.push(sender._id);
     } else {
@@ -29,7 +28,6 @@ export const requestToFollow = async (req, res) => {
     await receiver.save();
     await sender.save();
 
-    // 🔔 Создаём уведомление
     const newNotification = new Notification({
       sender: sender._id,
       receiver: receiver._id,
@@ -55,11 +53,13 @@ export const requestToFollow = async (req, res) => {
 };
 
 export const acceptFollowRequest = async (req, res) => {
-  const { senderId } = req.body;
+  const { senderId, notificationId } = req.body;
   const user = req.user;
 
   try {
-    if (!senderId) return res.status(400).json({ message: "senderId not found" });
+    if (!senderId || !notificationId) {
+      return res.status(400).json({ message: "senderId or notificationId not found" });
+    }
 
     const requestedUser = await User.findById(senderId);
 
@@ -77,12 +77,44 @@ export const acceptFollowRequest = async (req, res) => {
 
     requestedUser.following.push(user._id);
 
+    await Notification.findByIdAndDelete(notificationId);
     await requestedUser.save();
     await user.save();
 
-    return res.status(200).json({ message: "Follow request accepted" });
+    return res.status(200).json({ message: "Follow request accepted", user });
   } catch (error) {
     console.log("Error accepting follow request:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const declineFollowRequest = async (req, res) => {
+  const { senderId, notificationId } = req.body;
+  const user = req.user;
+
+  try {
+    if (!senderId || !notificationId) {
+      return res.status(400).json({ message: "senderId or notificationId not found" });
+    }
+
+    const requestedUser = await User.findById(senderId);
+
+    if (!requestedUser) {
+      return res.status(404).json({ message: "requested follow user not found" });
+    }
+
+    if (!user.followRequests.includes(senderId)) {
+      return res.status(400).json({ message: "Follow request not found" });
+    }
+
+    user.followRequests = user.followRequests.filter((reqId) => reqId.toString() !== senderId.toString());
+
+    await Notification.findByIdAndDelete(notificationId);
+    await user.save();
+
+    return res.status(200).json({ message: "Follow request declined", user });
+  } catch (error) {
+    console.error("Error declining follow request:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -113,7 +145,6 @@ export const findUsers = async (req, res) => {
 export const savePost = async (req, res) => {
   const { postId } = req.body;
   const user = req.user;
-  console.log(postId);
   try {
     if (!postId) {
       return res.status(400).json({ message: "Post ID is required" });
@@ -132,6 +163,19 @@ export const savePost = async (req, res) => {
     });
   } catch (error) {
     console.log("Error saving post:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getSavedPosts = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const savedPosts = await Post.find({ _id: { $in: user.savedPosts } }).select("image");
+
+    return res.status(201).json(savedPosts);
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

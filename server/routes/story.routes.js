@@ -1,14 +1,18 @@
 import express from "express";
 
-import { addStory, deleteStory, updateStoryView } from "../controllers/story.controller.js";
+import { addStory, deleteStory, getStories, updateStoryView, getStoryById } from "../controllers/story.controller.js";
 import { protectRoute } from "../middlewares/protectRoute.js";
 
 const router = express.Router();
 
-router.post("/", addStory);
+router.post("/", protectRoute, addStory);
 
-router.delete("/:storyId", protectRoute, deleteStory);
+router.get("/", protectRoute, getStories);
 
-router.patch("/", protectRoute, updateStoryView);
+router.get("/:id", getStoryById);
+
+router.delete("/:id", protectRoute, deleteStory);
+
+router.patch("/:id", protectRoute, updateStoryView);
 
 export default router;

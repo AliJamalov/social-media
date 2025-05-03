@@ -7,7 +7,7 @@ import { CgProfile } from "react-icons/cg";
 
 const Navbar = () => {
   return (
-    <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-0 left-1/2">
+    <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 bottom-0 left-1/2">
       <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
         <NavLink
           to="/"
@@ -44,7 +44,7 @@ const Navbar = () => {
         </div>
 
         <NavLink
-          to="/saved-post"
+          to="/saved-posts"
           className={({ isActive }) =>
             `inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 group ${
               isActive ? "text-blue-600" : "text-gray-500"

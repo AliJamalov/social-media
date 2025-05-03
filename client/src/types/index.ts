@@ -39,6 +39,7 @@ export type Comment = {
 };
 
 export type Notification = {
+  _id: string;
   sender: User;
   receiver: User;
   text: string;
@@ -46,4 +47,13 @@ export type Notification = {
   post?: Post;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type Story = {
+  _id: string;
+  user: User;
+  image: string;
+  viewers: string[];
+  text: string | null;
+  createdAt: Date;
 };

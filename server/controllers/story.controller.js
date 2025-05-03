@@ -1,15 +1,14 @@
 import Story from "../models/story.model.js";
 
 export const addStory = async (req, res) => {
-  const { image, text } = req.body;
-  const user = req.user;
+  const { mediaUrl, text } = req.body;
 
   try {
-    if (!image) return res.status(400).json({ message: "Image is required!" });
+    if (!mediaUrl) return res.status(400).json({ message: "Image is required!" });
 
     const newStory = new Story({
-      user: user._id,
-      image,
+      user: req.user._id,
+      mediaUrl,
       text,
     });
 
@@ -22,24 +21,35 @@ export const addStory = async (req, res) => {
   }
 };
 
-export const getMyStories = async (req, res) => {
-  const userId = req.user._id;
-
+export const getStories = async (req, res) => {
   try {
-    const stories = await Story.find({ user: userId });
+    const userIds = [...req.user.following, req.user._id];
 
-    return res.status(200).json(stories);
+    const stories = await Story.find({ user: { $in: userIds } })
+      .populate({
+        path: "user",
+        match: { isPrivate: false },
+        select: "username avatar",
+      })
+      .sort({ createdAt: -1 });
+
+    const visibleStories = stories.filter((story) => {
+      return story.user !== null || story.user?._id?.toString() === req.user._id.toString();
+    });
+
+    return res.status(200).json(visibleStories);
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching stories:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
 export const updateStoryView = async (req, res) => {
-  const { storyId } = req.params;
+  const { id } = req.params;
   const userId = req.user._id;
 
   try {
-    const story = await Story.findById(storyId);
+    const story = await Story.findById(id);
     if (!story) {
       return res.status(404).json({ message: "Story not found!" });
     }
@@ -64,6 +74,19 @@ export const deleteStory = async (req, res) => {
     if (!deletedStory) {
       return res.status(404).json({ message: "Story not found!" });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getStoryById = async (req, res) => {
+  try {
+    const story = await Story.findById(req.params.id);
+
+    if (!story) return res.status(404).json({ message: "Story not found!" });
+
+    return res.status(200).json(story);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });

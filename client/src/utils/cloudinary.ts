@@ -3,7 +3,6 @@ import axios from "axios";
 const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
-// Функция для загрузки одного изображения
 export const uploadSingleImage = async (file: File): Promise<string | null> => {
   try {
     const formDataImage = new FormData();

@@ -4,7 +4,9 @@ import {
   findUsers,
   requestToFollow,
   acceptFollowRequest,
+  declineFollowRequest,
   savePost,
+  getSavedPosts,
   deleteFromSavedPosts,
   updateProfile,
   getUserProfile,
@@ -13,18 +15,22 @@ import { protectRoute } from "../middlewares/protectRoute.js";
 
 const router = express.Router();
 
-router.get("/:query", findUsers);
-
 router.get("/profile/:id", getUserProfile);
 
 router.post("/request", protectRoute, requestToFollow);
 
 router.post("/accept", protectRoute, acceptFollowRequest);
 
+router.post("/decline", protectRoute, declineFollowRequest);
+
 router.post("/save-post", protectRoute, savePost);
+
+router.get("/saved-posts", protectRoute, getSavedPosts);
 
 router.patch("/", protectRoute, updateProfile);
 
 router.delete("/:postId", protectRoute, deleteFromSavedPosts);
+
+router.get("/:query", findUsers);
 
 export default router;

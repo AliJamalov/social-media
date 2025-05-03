@@ -1,5 +1,6 @@
 import { FiHeart, FiMessageCircle, FiSend } from "react-icons/fi";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa6";
+import { SlOptionsVertical } from "react-icons/sl";
 import { formatTimeAgo } from "../../utils/formatTimeAgo";
 import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
@@ -77,6 +78,7 @@ const Post = ({
     if (user?.savedPosts.includes(id)) return;
     try {
       const response = await axiosInstance.post("/users/save-post", { postId: id });
+      setSavedPosts(true);
       setUser(response.data.user);
     } catch (error) {
       console.log(error);
@@ -84,7 +86,7 @@ const Post = ({
   };
 
   return (
-    <div className="max-w-md w-full bg-white shadow-md mx-auto mb-6 text-black pb-2 rounded-md">
+    <div className="w-full bg-white shadow-md mx-auto mb-6 text-black pb-2 md:max-w-[500px]">
       {/* Top: user info */}
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-3">
@@ -97,6 +99,7 @@ const Post = ({
             <span className="font-semibold text-sm">{username}</span>
           </Link>
         </div>
+        <SlOptionsVertical color="black" size={25} />
       </div>
 
       {/* Image with skeleton */}
@@ -105,7 +108,7 @@ const Post = ({
         <img
           src={image}
           alt="post"
-          className={`w-full object-cover max-h-[500px] transition-opacity duration-300 ${
+          className={`w-full h-[500px] object-cover transition-opacity duration-300 ${
             imageLoaded ? "opacity-100" : "opacity-0"
           }`}
           onLoad={() => setImageLoaded(true)}
@@ -129,11 +132,7 @@ const Post = ({
           <FiSend />
         </div>
 
-        {savedPosts ? (
-          <FaBookmark onClick={() => handleSavePost(_id)} size={25} />
-        ) : (
-          <FaRegBookmark onClick={() => handleSavePost(_id)} size={25} />
-        )}
+        {savedPosts ? <FaBookmark size={25} /> : <FaRegBookmark onClick={() => handleSavePost(_id)} size={25} />}
       </div>
 
       {/* Likes */}

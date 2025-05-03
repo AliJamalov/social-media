@@ -4,7 +4,7 @@ import { CgProfile } from "react-icons/cg";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { axiosInstance } from "../../utils/axios";
 import { Comment } from "../../types";
-import CommentSkeleton from "../common/CommentSkeleton";
+import CommentSkeleton from "./CommentSkeleton";
 
 type CommentProps = {
   setIsOpenComments: (value: boolean) => void;
@@ -16,13 +16,13 @@ const Comments = ({ setIsOpenComments, postId }: CommentProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [addLoading, setAddLoading] = useState(false);
   const [getLoading, setGetLoading] = useState(false);
+  const [receiverId, setReceiverId] = useState(null);
 
   const fetchComments = async () => {
     setGetLoading(true);
     try {
       const response = await axiosInstance.get(`/comments/${postId}`);
       setComments(response.data);
-      console.log(response);
     } catch (error) {
       console.log(error);
     } finally {
@@ -34,6 +34,21 @@ const Comments = ({ setIsOpenComments, postId }: CommentProps) => {
     fetchComments();
   }, []);
 
+  useEffect(() => {
+    const fetchPostAuthor = async () => {
+      try {
+        const res = await axiosInstance.get(`/posts/${postId}`);
+        setReceiverId(res.data.user._id);
+      } catch (err) {
+        console.log("Failed to fetch post:", err);
+      }
+    };
+
+    if (postId) {
+      fetchPostAuthor();
+    }
+  }, [postId]);
+
   const handleAddComment = async () => {
     if (addLoading || comment === "") return;
     setAddLoading(true);
@@ -41,6 +56,7 @@ const Comments = ({ setIsOpenComments, postId }: CommentProps) => {
       const response = await axiosInstance.post("/comments", {
         postId,
         text: comment,
+        receiverId,
       });
       setComment("");
       fetchComments();

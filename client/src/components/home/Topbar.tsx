@@ -25,7 +25,7 @@ const Totbar = ({ isHasNotification, setIsHasNotification }: TopbarProps) => {
         <div className="flex items-center gap-4">
           <Link to="/notifications" className="relative">
             <IoIosNotificationsOutline size={25} />
-            {isHasNotification && <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />}
+            {isHasNotification && <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" />}
           </Link>
           <IoChatbubblesOutline size={25} />
         </div>

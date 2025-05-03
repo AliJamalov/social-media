@@ -44,7 +44,7 @@ const PostViewer = () => {
   }
 
   return (
-    <div>
+    <div className="pb-[70px]">
       {posts?.map((post) => (
         <Post
           _id={post._id}

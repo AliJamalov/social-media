@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Post } from "../../types";
 import { FaLock } from "react-icons/fa";
 
@@ -13,9 +14,9 @@ const Posts = ({ posts, otherUserPosts, isOtherUser, isPrivate }: PostsProps) =>
     return (
       <section className="flex flex-wrap w-full mt-5">
         {posts?.map((post) => (
-          <div key={post._id} className="w-1/3 aspect-square overflow-hidden">
+          <Link to={`/post/${post._id}`} key={post._id} className="w-1/3 aspect-square overflow-hidden">
             <img src={post.image} alt="image" className="w-full p-[1px] h-full object-cover" />
-          </div>
+          </Link>
         ))}
       </section>
     );
@@ -34,9 +35,9 @@ const Posts = ({ posts, otherUserPosts, isOtherUser, isPrivate }: PostsProps) =>
   return (
     <section className="flex flex-wrap w-full mt-5">
       {otherUserPosts?.map((post) => (
-        <div key={post._id} className="w-1/3 aspect-square overflow-hidden">
+        <Link to={`/post/${post._id}`} key={post._id} className="w-1/3 aspect-square overflow-hidden">
           <img src={post.image} alt="image" className="w-full p-[1px] h-full object-cover" />
-        </div>
+        </Link>
       ))}
     </section>
   );
