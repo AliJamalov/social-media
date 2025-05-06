@@ -13,14 +13,17 @@ import Notifications from "./pages/Notifications";
 import SavedPosts from "./pages/SavedPosts";
 import SinglePost from "./pages/Post";
 import NewStory from "./pages/NewStory";
+import Stories from "./pages/Stories";
+import Conversations from "./pages/Conversations";
 import { useAuthStore } from "./store/authStore";
 import { ImSpinner8 } from "react-icons/im";
 import { Toaster } from "react-hot-toast";
 import { useSocketStore } from "./store/socketStore";
+import Chat from "./pages/Chat";
 
 const App = () => {
   const location = useLocation();
-  const pathsToHide = ["/login", "/signup", "/new-post"];
+  const pathsToHide = ["/login", "/signup", "/new-post", "/stories", "/my-chats", "/chat"];
 
   const { user, checkAuth, checkAuthLoading } = useAuthStore();
   const { connectSocket, disconnectSocket } = useSocketStore();
@@ -52,10 +55,13 @@ const App = () => {
       <Routes>
         <Route path="/" element={user ? <Home /> : <Navigate to="login" />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/my-chats" element={<Conversations />} />
+        <Route path="/chat/:id" element={<Chat />} />
         <Route path="/new-post" element={<AddPost />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/saved-posts" element={<SavedPosts />} />
         <Route path="/new-story" element={<NewStory />} />
+        <Route path="/stories/:id" element={<Stories />} />
         <Route path="/posts/:id" element={<PostViewer />} />
         <Route path="/post/:id" element={<SinglePost />} />
         <Route path="/profile/:id?" element={user ? <Profile /> : <Navigate to="/" />} />

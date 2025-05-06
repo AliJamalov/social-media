@@ -1,9 +1,10 @@
 import { useAuthStore } from "../../store/authStore";
-import { CgProfile } from "react-icons/cg";
+import { BiSolidUserCircle } from "react-icons/bi";
 import { MdLogout } from "react-icons/md";
 import { User } from "../../types";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../utils/axios";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   postsCount: number;
@@ -24,6 +25,7 @@ const ProfileInfo = ({
   otherUserPostsCount,
   isPrivate,
 }: Props) => {
+  const navigate = useNavigate();
   const { user, logout } = useAuthStore();
 
   const profileUser = isOtherUser ? profileInfo : user;
@@ -42,7 +44,12 @@ const ProfileInfo = ({
     setLoading(true);
     try {
       await axiosInstance.post("/users/request", { receiverId: id });
-      setIsRequested(true);
+
+      if (profileInfo?.isPrivate === true) {
+        setIsRequested(true);
+      } else {
+        profileInfo?.followers?.push(user._id);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -69,7 +76,7 @@ const ProfileInfo = ({
         {profileUser?.avatar ? (
           <img src={profileUser.avatar} className="h-[75px] w-[75px] object-cover rounded-full" alt="profile-image" />
         ) : (
-          <CgProfile size={70} color="white" />
+          <BiSolidUserCircle size={80} color="white" />
         )}
 
         <div>
@@ -91,8 +98,8 @@ const ProfileInfo = ({
       {/* Bio */}
       <p className="my-4">{profileUser?.bio}</p>
 
-      {isOtherUser && (
-        <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3">
+        {isOtherUser && !profileInfo?.followers?.includes(user?._id!) && (
           <button
             onClick={handleSendFollow}
             disabled={loading}
@@ -100,9 +107,16 @@ const ProfileInfo = ({
           >
             {isRequested ? "Requested" : "Follow"}
           </button>
-          {!isPrivate && <button className="bg-[#ffeaa7] text-gray-600 rounded-md px-2 py-1">Message</button>}
-        </div>
-      )}
+        )}
+        {!isPrivate && isOtherUser && (
+          <button
+            onClick={() => navigate(`/chat/${profileInfo?._id}`)}
+            className="bg-[#ffeaa7] text-gray-600 rounded-md px-2 py-1"
+          >
+            Message
+          </button>
+        )}
+      </div>
 
       {/* Edit button */}
       {!isOtherUser && (

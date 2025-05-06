@@ -52,8 +52,24 @@ export type Notification = {
 export type Story = {
   _id: string;
   user: User;
-  image: string;
+  mediaUrl: string;
   viewers: string[];
   text: string | null;
+  createdAt: Date;
+};
+
+export type Message = {
+  _id: string;
+  sender: string;
+  receiver: string;
+  message: string;
+  createdAt: Date;
+  read: boolean;
+};
+
+export type Convesation = {
+  _id: string;
+  participants: User[];
+  messages: Message[];
   createdAt: Date;
 };

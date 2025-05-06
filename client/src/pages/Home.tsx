@@ -47,7 +47,7 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="pt-6">
+      <div className="pt-[160px]">
         {Array(4)
           .fill(null)
           .map((_, index) => (

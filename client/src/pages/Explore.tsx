@@ -71,7 +71,7 @@ const Explore = () => {
         <div className="grid grid-cols-3">
           {posts.map((post) => (
             <Link to={`/posts/${post._id}`} key={post._id}>
-              <img src={post.image} alt="explore-img" className="w-full h-full object-cover" />
+              <img src={post.image} alt="explore-img" className="w-full h-[200px] object-cover" />
             </Link>
           ))}
         </div>

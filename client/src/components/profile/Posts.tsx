@@ -14,7 +14,7 @@ const Posts = ({ posts, otherUserPosts, isOtherUser, isPrivate }: PostsProps) =>
     return (
       <section className="flex flex-wrap w-full mt-5">
         {posts?.map((post) => (
-          <Link to={`/post/${post._id}`} key={post._id} className="w-1/3 aspect-square overflow-hidden">
+          <Link to={`/post/${post._id}`} key={post._id} className="w-1/3 h-[200px] overflow-hidden">
             <img src={post.image} alt="image" className="w-full p-[1px] h-full object-cover" />
           </Link>
         ))}
@@ -35,7 +35,7 @@ const Posts = ({ posts, otherUserPosts, isOtherUser, isPrivate }: PostsProps) =>
   return (
     <section className="flex flex-wrap w-full mt-5">
       {otherUserPosts?.map((post) => (
-        <Link to={`/post/${post._id}`} key={post._id} className="w-1/3 aspect-square overflow-hidden">
+        <Link to={`/post/${post._id}`} key={post._id} className="w-1/3 h-[200px] overflow-hidden">
           <img src={post.image} alt="image" className="w-full p-[1px] h-full object-cover" />
         </Link>
       ))}

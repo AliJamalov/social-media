@@ -79,7 +79,7 @@ export const logout = (req, res) => {
   try {
     res.clearCookie("jwt", {
       httpOnly: true,
-      sameSite: "Lax",
+      sameSite: "None",
       secure: true,
     });
     res.status(200).json({ message: "Logged out successfully" });

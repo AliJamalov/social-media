@@ -24,11 +24,11 @@ const NewStory = () => {
   };
 
   return (
-    <div className="h-[80vh] relative">
+    <div className="h-[80vh] relative pb-[30px]">
       <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-xl font-bold">
         {text}
       </p>
-      {prevImage && <img src={prevImage} alt="story-media" className="h-full" />}
+      {prevImage && <img src={prevImage} alt="story-media" className="h-full w-full object-cover" />}
       <div className="px-3 mt-4 flex items-center gap-3">
         <input
           value={text}

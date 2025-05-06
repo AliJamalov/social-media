@@ -27,7 +27,9 @@ const Totbar = ({ isHasNotification, setIsHasNotification }: TopbarProps) => {
             <IoIosNotificationsOutline size={25} />
             {isHasNotification && <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" />}
           </Link>
-          <IoChatbubblesOutline size={25} />
+          <Link to="/my-chats">
+            <IoChatbubblesOutline size={25} />
+          </Link>
         </div>
       </div>
     </section>

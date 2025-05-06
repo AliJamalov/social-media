@@ -247,3 +247,40 @@ export const getUserProfile = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getRecommendedUsers = async (req, res) => {
+  const user = req.user;
+  const followingIds = user.followings || [];
+
+  try {
+    const recommendedUsers = await User.aggregate([
+      {
+        $match: {
+          _id: { $ne: user._id, $nin: followingIds },
+          isPrivate: false,
+        },
+      },
+      { $sample: { size: 20 } },
+      { $project: { username: 1, avatar: 1, _id: 1 } },
+    ]);
+
+    return res.status(200).json(recommendedUsers);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id).select("avatar username");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};

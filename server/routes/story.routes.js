@@ -1,6 +1,13 @@
 import express from "express";
 
-import { addStory, deleteStory, getStories, updateStoryView, getStoryById } from "../controllers/story.controller.js";
+import {
+  addStory,
+  deleteStory,
+  getStories,
+  updateStoryView,
+  getStoryById,
+  getMyStory,
+} from "../controllers/story.controller.js";
 import { protectRoute } from "../middlewares/protectRoute.js";
 
 const router = express.Router();
@@ -8,6 +15,8 @@ const router = express.Router();
 router.post("/", protectRoute, addStory);
 
 router.get("/", protectRoute, getStories);
+
+router.get("/my-story", protectRoute, getMyStory);
 
 router.get("/:id", getStoryById);
 

@@ -3,7 +3,7 @@ import { AiOutlineHome } from "react-icons/ai";
 import { IoSearchOutline } from "react-icons/io5";
 import { BsBookmark } from "react-icons/bs";
 import { GoPlus } from "react-icons/go";
-import { CgProfile } from "react-icons/cg";
+import { BiSolidUserCircle } from "react-icons/bi";
 
 const Navbar = () => {
   return (
@@ -63,7 +63,7 @@ const Navbar = () => {
             }`
           }
         >
-          <CgProfile size={25} />
+          <BiSolidUserCircle size={35} />
           <span className="sr-only">Profile</span>
         </NavLink>
       </div>

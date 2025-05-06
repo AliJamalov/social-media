@@ -29,7 +29,7 @@ export const getStories = async (req, res) => {
       .populate({
         path: "user",
         match: { isPrivate: false },
-        select: "username avatar",
+        select: "username avatar _id",
       })
       .sort({ createdAt: -1 });
 
@@ -38,6 +38,21 @@ export const getStories = async (req, res) => {
     });
 
     return res.status(200).json(visibleStories);
+  } catch (error) {
+    console.error("Error fetching stories:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getMyStory = async (req, res) => {
+  try {
+    const story = await Story.findOne({ user: req.user._id });
+
+    if (!story) {
+      return res.status(404).json({ message: "story not found!" });
+    }
+
+    return res.status(200).json(story);
   } catch (error) {
     console.error("Error fetching stories:", error);
     return res.status(500).json({ message: "Server error" });

@@ -10,12 +10,18 @@ import {
   deleteFromSavedPosts,
   updateProfile,
   getUserProfile,
+  getRecommendedUsers,
+  getUserById,
 } from "../controllers/user.controller.js";
 import { protectRoute } from "../middlewares/protectRoute.js";
 
 const router = express.Router();
 
 router.get("/profile/:id", getUserProfile);
+
+router.get("/user/:id", getUserById);
+
+router.get("/recommended", protectRoute, getRecommendedUsers);
 
 router.post("/request", protectRoute, requestToFollow);
 
