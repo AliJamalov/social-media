@@ -3,12 +3,11 @@ import { extractTime } from "../../utils/extractTime";
 
 type Props = {
   sender: string;
-  read: boolean;
   message: string;
   createdAt: Date;
 };
 
-const Message = ({ sender, read, message, createdAt }: Props) => {
+const Message = ({ sender, message, createdAt }: Props) => {
   const { user } = useAuthStore();
 
   const fromMe = sender === user?._id;

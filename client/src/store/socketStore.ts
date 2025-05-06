@@ -2,7 +2,9 @@ import { create } from "zustand";
 import io, { Socket } from "socket.io-client";
 import { User } from "../types";
 
-const URI = "http://localhost:5000";
+const isLocalhost = window.location.hostname === "localhost";
+
+const URI = isLocalhost ? "http://localhost:5000" : "https://social-media-lf3m.onrender.com";
 
 type socketStore = {
   socket: Socket | null;
