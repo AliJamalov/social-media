@@ -16,6 +16,7 @@ const Stories = () => {
 
   const [image, setImage] = useState<File | null>(null);
   const [prevImage, setPrevImage] = useState("");
+  console.log(image, prevImage);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
