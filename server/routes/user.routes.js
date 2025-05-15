@@ -12,6 +12,7 @@ import {
   getUserProfile,
   getRecommendedUsers,
   getUserById,
+  getMyFollowings,
 } from "../controllers/user.controller.js";
 import { protectRoute } from "../middlewares/protectRoute.js";
 
@@ -22,6 +23,8 @@ router.get("/profile/:id", getUserProfile);
 router.get("/user/:id", getUserById);
 
 router.get("/recommended", protectRoute, getRecommendedUsers);
+
+router.get("/my-followings", protectRoute, getMyFollowings);
 
 router.post("/request", protectRoute, requestToFollow);
 

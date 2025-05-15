@@ -7,20 +7,26 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    message: {
-      type: String,
-      required: true,
-    },
+
+    message: { type: String },
+
     read: {
       type: Boolean,
       default: false,
     },
+
+    media: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
   },
+
   { timestamps: true }
 );
 

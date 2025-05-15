@@ -7,12 +7,14 @@ import Comments from "../components/common/Comments";
 import { useSocketStore } from "../store/socketStore";
 import PostSkeleton from "../components/common/PostSkeleton";
 import Stories from "../components/home/Stories";
+import MyFollowers from "../components/home/MyFollowers";
 
 const Home = () => {
   const { socket } = useSocketStore();
   const [posts, setPosts] = useState<postType[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOpenComments, setIsOpenComments] = useState(false);
+  const [isShowMyFollowers, setIsShowMyFollowers] = useState(false);
   const [postId, setPostId] = useState<string | null>(null);
   const [isHasNotification, setIsHasNotification] = useState(false);
 
@@ -75,10 +77,12 @@ const Home = () => {
             createdAt={post.createdAt}
             setIsOpenComments={setIsOpenComments}
             setPostId={setPostId}
+            setIsShowMyFollowers={setIsShowMyFollowers}
           />
         ))}
       </section>
       {isOpenComments && <Comments postId={postId} setIsOpenComments={setIsOpenComments} />}
+      {isShowMyFollowers && <MyFollowers postId={postId} setIsShowMyFollowers={setIsShowMyFollowers} />}
     </div>
   );
 };

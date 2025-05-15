@@ -21,7 +21,7 @@ const Totbar = ({ isHasNotification, setIsHasNotification }: TopbarProps) => {
   return (
     <section>
       <div className="flex justify-between items-center pt-4 px-3 mb-4">
-        <h1>Instakilogram</h1>
+        <h1>social media</h1>
         <div className="flex items-center gap-4">
           <Link to="/notifications" className="relative">
             <IoIosNotificationsOutline size={25} />

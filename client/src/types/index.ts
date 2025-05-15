@@ -63,6 +63,14 @@ export type Message = {
   sender: string;
   receiver: string;
   message: string;
+  media: {
+    image: string;
+    _id: string;
+    user: {
+      username: string;
+      avatar: string;
+    };
+  };
   createdAt: Date;
   read: boolean;
 };

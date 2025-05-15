@@ -284,3 +284,16 @@ export const getUserById = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getMyFollowings = async (req, res) => {
+  const followingsUsersId = req.user.following;
+
+  try {
+    const myFollowings = await User.find({ _id: { $in: followingsUsersId } }, "_id username avatar");
+
+    return res.status(200).json(myFollowings);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

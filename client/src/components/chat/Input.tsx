@@ -34,7 +34,7 @@ const Input = ({ id, messages, setMessages }: Props) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           type="text"
-          className="flex-1 text-white border border-white rounded-full py-3 px-4 outline-none"
+          className="text-white border border-white rounded-full py-3 px-4 outline-none w-full"
           placeholder="message..."
         />
         <button onClick={handleSendeMessage} className={`${loading ? "bg-blue-500" : "bg-blue-600"} p-3 rounded-full`}>

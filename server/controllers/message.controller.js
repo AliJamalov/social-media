@@ -4,7 +4,7 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, media } = req.body;
     const { id: receiver } = req.params;
     const sender = req.user._id;
 
@@ -21,7 +21,8 @@ export const sendMessage = async (req, res) => {
     const newMessage = new Message({
       sender,
       receiver,
-      message,
+      message: message || null,
+      media: media || null,
     });
 
     if (newMessage) {
@@ -49,7 +50,19 @@ export const getMessages = async (req, res) => {
 
     const conversation = await Conversation.findOne({
       participants: { $all: [senderId, userToChatId] },
-    }).populate("messages");
+    }).populate({
+      path: "messages",
+      populate: [
+        {
+          path: "media",
+          select: "_id image user",
+          populate: {
+            path: "user",
+            select: "username avatar",
+          },
+        },
+      ],
+    });
 
     if (!conversation) return res.status(200).json([]);
 
@@ -67,7 +80,7 @@ export const getMyChats = async (req, res) => {
   try {
     const chats = await Conversation.find({ participants: userId }).populate({
       path: "participants",
-      select: "username avatar",
+      select: "username avatar _id",
       match: { _id: { $ne: userId } },
     });
 

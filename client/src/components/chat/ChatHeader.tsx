@@ -1,6 +1,7 @@
 import { BiSolidUserCircle } from "react-icons/bi";
 import { BiArrowBack } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
+import { useSocketStore } from "../../store/socketStore";
 
 type Props = {
   username: string;
@@ -10,6 +11,10 @@ type Props = {
 
 const ChatHeader = ({ username, avatar, userId }: Props) => {
   const navigate = useNavigate();
+  const { onlineUsers } = useSocketStore();
+
+  const isOnline = onlineUsers.some((id) => id === userId);
+
   return (
     <section className="flex justify-between items-center mb-5">
       <Link to={`/profile/${userId}`} className="flex items-center gap-3">
@@ -18,7 +23,10 @@ const ChatHeader = ({ username, avatar, userId }: Props) => {
         ) : (
           <BiSolidUserCircle color="white" className="w-10 h-10" />
         )}
-        <p className="text-white font-medium">{username}</p>
+        <div>
+          <p className="text-white font-medium">{username}</p>
+          {isOnline && <p className="text-xs text-white">online</p>}
+        </div>
       </Link>
       <button
         onClick={() => navigate("/my-chats")}

@@ -28,7 +28,11 @@ const Conversations = () => {
       ) : (
         conversations?.map((dialog) => (
           <Link to={`/chat/${dialog?.participants[0]?._id}`} key={dialog._id}>
-            <Conversation username={dialog.participants[0]?.username} avatar={dialog.participants[0]?.avatar} />
+            <Conversation
+              username={dialog.participants[0]?.username}
+              avatar={dialog.participants[0]?.avatar}
+              userId={dialog.participants[0]?._id}
+            />
           </Link>
         ))
       )}

@@ -8,7 +8,7 @@ const URI = isLocalhost ? "http://localhost:5000" : "https://social-media-lf3m.o
 
 type socketStore = {
   socket: Socket | null;
-  onlineUsers: User[];
+  onlineUsers: string[];
   connectSocket: (authUser: User) => void;
   disconnectSocket: () => void;
 };
@@ -26,7 +26,7 @@ export const useSocketStore = create<socketStore>((set, get) => ({
       },
     });
 
-    socket.on("getOnlineUsers", (users: User[]) => {
+    socket.on("getOnlineUsers", (users: string[]) => {
       set({ onlineUsers: users });
     });
 

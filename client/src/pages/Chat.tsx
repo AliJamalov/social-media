@@ -65,7 +65,7 @@ const Chat = () => {
       <ChatHeader userId={id!} avatar={avatar} username={username} />
       {messages?.map((message) => (
         <div ref={lastMessageRef} key={message._id}>
-          <Message createdAt={message.createdAt} sender={message.sender} message={message.message} />
+          <Message {...message} />
         </div>
       ))}
       <div className="mt-15">

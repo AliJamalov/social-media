@@ -20,6 +20,8 @@ type PostProps = {
   createdAt: Date;
   setIsOpenComments?: (value: boolean) => void;
   setPostId?: (value: string) => void;
+  setUserId?: (value: string) => void;
+  setIsShowMyFollowers: (value: boolean) => void;
 };
 
 const Post = ({
@@ -33,6 +35,7 @@ const Post = ({
   createdAt,
   setPostId,
   setIsOpenComments,
+  setIsShowMyFollowers,
 }: PostProps) => {
   const { user, setUser } = useAuthStore();
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -127,7 +130,12 @@ const Post = ({
               setPostId?.(_id);
             }}
           />
-          <FiSend />
+          <FiSend
+            onClick={() => {
+              setIsShowMyFollowers(true);
+              setPostId?.(_id);
+            }}
+          />
         </div>
 
         {savedPosts ? <FaBookmark size={25} /> : <FaRegBookmark onClick={() => handleSavePost(_id)} size={25} />}
