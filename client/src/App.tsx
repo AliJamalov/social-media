@@ -53,7 +53,7 @@ const App = () => {
   return (
     <div className="bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#ff0080] min-h-screen">
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={user ? <Home /> : <Navigate to="login" />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/my-chats" element={<Conversations />} />
         <Route path="/chat/:id" element={<Chat />} />
@@ -64,9 +64,9 @@ const App = () => {
         <Route path="/stories/:id" element={<Stories />} />
         <Route path="/posts/:id" element={<PostViewer />} />
         <Route path="/post/:id" element={<SinglePost />} />
-        <Route path="/profile/:id?" element={<Profile />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Signin />} />
+        <Route path="/profile/:id?" element={user ? <Profile /> : <Navigate to="/" />} />
+        <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+        <Route path="/login" element={!user ? <Signin /> : <Navigate to="/" />} />
       </Routes>
       {!hideNavbar && <Navbar />}
       <Toaster />
